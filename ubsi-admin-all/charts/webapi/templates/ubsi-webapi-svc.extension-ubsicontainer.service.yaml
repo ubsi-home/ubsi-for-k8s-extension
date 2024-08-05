@@ -1,0 +1,23 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: ubsi-webapi-svc
+  #namespace: extension-ubsicontainer
+  labels:
+    app: ubsi-webapi-svc
+spec:
+  ports:
+    - name: http-8080
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+      nodePort: 31621
+  selector:
+    app: ubsi-webapi
+  type: NodePort
+  sessionAffinity: None
+  externalTrafficPolicy: Cluster
+  ipFamilies:
+    - IPv4
+  ipFamilyPolicy: SingleStack
+  internalTrafficPolicy: Cluster

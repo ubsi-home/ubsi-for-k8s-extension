@@ -1,0 +1,29 @@
+{{- if eq .Values.architecture "replicaset" }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ubsi-mongo-cm
+data:
+  mongod_rs.conf: |+
+    systemLog:
+      destination: file
+      logAppend: true
+      path: /data/mongod.log
+    storage:
+      dbPath: /data
+      directoryPerDB: true
+      wiredTiger:
+        engineConfig:
+          cacheSizeGB: 2
+          directoryForIndexes: true
+    processManagement:
+      fork: true
+      pidFilePath: /data/mongod.pid
+    net:
+      port: 27017
+      bindIp: 0.0.0.0
+      maxIncomingConnections: 5000
+    replication:
+      oplogSizeMB: 1024
+      replSetName: rs_prod
+{{- end }}

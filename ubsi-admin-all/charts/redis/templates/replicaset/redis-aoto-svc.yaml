@@ -1,0 +1,19 @@
+# templates/services.yaml
+{{- if eq .Values.architecture "replicaset" }}
+{{- range $index, $e := until (int .Values.replicaCount) }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: "redis-sentinel-svc-{{ $index }}" 
+  labels:
+    app: redis-sentinel
+spec:
+  type: ClusterIP
+  ports:
+    - name: redis
+      port: 26379
+  selector:
+    statefulset.kubernetes.io/pod-name: redis-sentinel-{{ $index }}
+---
+{{- end }}
+{{- end }}

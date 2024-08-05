@@ -1,0 +1,58 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: ubsi-container
+  #namespace: extension-ubsicontainer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ubsi-container
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: ubsi-container
+    spec:
+      volumes:
+        - name: config-volume
+          configMap:
+            name: ubsi-redis-conf
+            defaultMode: 420
+      containers:
+        - name: ubsi-container
+          image: '{{ .Values.image.repository }}:{{ .Values.image.tag }}'
+          workingDir: /opt/ubsicontainer
+          ports:
+            - containerPort: 7112
+              protocol: TCP
+          env:
+            - name: CONFIG_FILE
+              value: /opt/ubsicontainer/rewin.ubsi.consumer.json
+          resources:
+            limits:
+              cpu: {{ .Values.deployment.resources.limits.cpu }}
+              memory: {{ .Values.deployment.resources.limits.memory }}
+            requests:
+              cpu: {{ .Values.deployment.resources.requests.cpu }}
+              memory: {{ .Values.deployment.resources.requests.memory }}
+          volumeMounts:
+            - name: config-volume
+              readOnly: true
+              mountPath: /opt/ubsicontainer/rewin.ubsi.consumer.json
+              subPath: rewin.ubsi.consumer.json
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+      restartPolicy: {{ .Values.image.pullPolicy }}
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      securityContext: {}
+      schedulerName: default-scheduler
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 25%
+      maxSurge: 25%
+  revisionHistoryLimit: 10
+  progressDeadlineSeconds: 600

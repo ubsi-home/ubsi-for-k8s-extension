@@ -1,0 +1,27 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: admin-front-svc
+  labels:
+    app: ubsi-admin-console-label
+spec:
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 80
+      nodePort: 31881
+    - name: https
+      protocol: TCP
+      port: 443
+      targetPort: 443
+      nodePort: 31443
+  selector:
+    app: ubsi-admin-front
+  type: NodePort
+  sessionAffinity: None
+  externalTrafficPolicy: Cluster
+  ipFamilies:
+    - IPv4
+  ipFamilyPolicy: SingleStack
+  internalTrafficPolicy: Cluster

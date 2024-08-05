@@ -1,0 +1,21 @@
+kind: Ingress
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: nexus
+spec:
+  {{ if .Values.ingressClass.name }}
+  ingressClassName: {{ .Values.ingressClass.name }}
+  {{- else }}
+  ingressClassName: nginx
+  {{- end }}
+  rules:
+    - host: rewin.nexus.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: nexus
+                port:
+                  number: 8081

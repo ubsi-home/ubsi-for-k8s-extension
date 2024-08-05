@@ -1,0 +1,13 @@
+apiVersion: extensions.kubesphere.io/v1alpha1
+kind: JSBundle
+metadata:
+  name: ubsipaas-js
+spec:
+  rawFrom:
+    configMapKeyRef:
+      key: index.js
+      name: ubsipaas-cm-{{ .Values.extEmbed }}
+      namespace: extension-ubsipaas
+status:
+  link: /dist/ubsipaas/index.js
+  state: Available

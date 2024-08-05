@@ -1,0 +1,41 @@
+{{- if eq .Values.architecture "replicaset" }}
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: ubsi-mongo-conf
+  annotations:
+    kubesphere.io/description: mongodb 配置文件
+data:
+  rewin.ubsi.mongodb.json: |-
+    {
+      "servers": [
+        {
+          {{- if .Values.service.name }}
+          "host": "ubsi-mongo-0.{{ .Values.service.name }}.extension-ubsipaas.svc.cluster.local",
+          {{- else }}
+          "host": "ubsi-mongo-0.ubsi-mongo-svc.extension-ubsipaas.svc.cluster.local",
+          {{- end }}
+          "port": 27017
+        },
+        {
+          {{- if .Values.service.name }}
+          "host": "ubsi-mongo-1.{{ .Values.service.name }}.extension-ubsipaas.svc.cluster.local",
+          {{- else }}
+          "host": "ubsi-mongo-0.ubsi-mongo-svc.extension-ubsipaas.svc.cluster.local",
+          {{- end }}
+          "port": 27017
+        },
+        {
+          {{- if .Values.service.name }}
+          "host": "ubsi-mongo-2.{{ .Values.service.name }}.extension-ubsipaas.svc.cluster.local",
+          {{- else }}
+          "host": "ubsi-mongo-0.ubsi-mongo-svc.extension-ubsipaas.svc.cluster.local",
+          {{- end }}
+          "port": 27017
+        }
+      ],
+      "option":{
+       "read_preference":1
+      }
+    }
+{{- end }}

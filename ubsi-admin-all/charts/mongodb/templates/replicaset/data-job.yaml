@@ -1,0 +1,28 @@
+{{- if eq .Values.architecture "replicaset" }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+ name: data-job
+spec:
+ template:
+  spec:
+   restartPolicy: Never
+   volumes:
+     - name: mongodb-config-volume
+       configMap:
+         name: ubsi-mongo-conf
+         defaultMode: 420
+   containers:
+   - name: mongodata
+     image: registry.cn-hangzhou.aliyuncs.com/ubsi/impmongodb:latest
+     imagePullPolicy: Always
+     command: ['sh', '-c','until nc -zv ubsi-mongo-{{ sub .Values.replicaCount 1 }}.ubsi-mongo-svc.extension-ubsipaas.svc 27017; do echo "Waiting for MongoDB..."; sleep 1; done; /opt/impmongodata/restoreall.sh']
+     volumeMounts:
+       - name: mongodb-config-volume
+         readOnly: true
+         mountPath: /opt/impmongodata/rewin.ubsi.mongodb.json
+         subPath: rewin.ubsi.mongodb.json
+ backoffLimit: 4
+ completions: 1
+ parallelism: 1
+ {{- end }}

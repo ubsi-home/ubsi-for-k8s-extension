@@ -1,0 +1,59 @@
+{{- if eq .Values.architecture "standalone" }}
+kind: StatefulSet
+apiVersion: apps/v1
+metadata:
+  name: mongodb
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      name: mongodb
+  serviceName: ubsi-mongo
+  template:
+    metadata:
+      labels:
+        name: mongodb
+    spec:
+      volumes:
+        - name: mongo-config
+          configMap:
+            name: mongo-config
+            defaultMode: 420
+        - name: mongo-pvc
+          persistentVolumeClaim:
+            claimName: mongo-pvc
+      containers:
+        - name: mongodb
+          image: "{{ .Values.mongodb.image.repository }}:{{ .Values.mongodb.image.tag }}"
+          command:
+            - sh
+            - '-c'
+            - exec mongod -f /data/mongodb/conf/mongodb.conf
+          ports:
+            - name: mongodb
+              containerPort: 27017
+              protocol: TCP
+          resources: {}
+          volumeMounts:
+            - name: mongo-config
+              mountPath: /data/mongodb/conf/
+            - name: mongo-pvc
+              mountPath: /data/db
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          imagePullPolicy: Always
+  volumeClaimTemplates:
+    - kind: PersistentVolumeClaim
+      apiVersion: v1
+      metadata:
+        name: mongo-pvc
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: "{{ .Values.persistence.size }}"
+        {{- if .Values.persistence.storageClass }}
+        storageClassName: "{{ .Values.persistence.storageClass }}"
+	{{- end }}
+{{- end }}

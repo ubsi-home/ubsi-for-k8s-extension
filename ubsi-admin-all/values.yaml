@@ -1,0 +1,11 @@
+base:
+  # 访问ks的域名, e.g. rewin.ubsi.admin.com,192.168.50.208.nip.io
+  domain: rewin.ubsi.admin.com
+  # ingress controller 对外服务的Node端口
+  ingressPort: 30888
+mongodb:
+  architecture: standalone ##replicaset 集群模式；standalone 单例模式
+  replicaCount: 1   ##replicaset 集群模式replicaCount > 1，一般设置为3，可以根据自身需求设置 ；standalone 单例模式 replicaCount=1
+redis:
+  architecture: standalone ##replicaset 集群模式；standalone 单例模式
+  replicaCount: 1   ##replicaset 集群模式replicaCount > 1，一般设置为3，可以根据自身需求设置 ；standalone 单例模式 replicaCount=1

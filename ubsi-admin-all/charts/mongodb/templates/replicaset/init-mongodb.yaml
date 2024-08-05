@@ -1,0 +1,41 @@
+{{- if eq .Values.architecture "replicaset" }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: init-mongodb-job
+spec:
+  template:
+    spec:
+      containers:
+      - name: init-mongodb
+        image: mongo:latest
+        command: ["/bin/bash", "-c"]
+        args:
+        - |
+          until mongosh --host ubsi-mongo-{{ sub .Values.replicaCount 1 }}.ubsi-mongo-svc.extension-ubsipaas.svc.cluster.local --port 27017 --eval 'db.runCommand({ping: 1});'; do 
+            echo 'Waiting for MongoDB to be available...'; 
+            sleep 2; 
+          done
+          mongosh --host ubsi-mongo-0.ubsi-mongo-svc.extension-ubsipaas.svc.cluster.local --eval '
+            const config = {
+              _id: "rs_prod",
+              members: [
+                { _id: 0, host: "ubsi-mongo-0.ubsi-mongo-svc.extension-ubsipaas.svc.cluster.local:27017" },
+                { _id: 1, host: "ubsi-mongo-1.ubsi-mongo-svc.extension-ubsipaas.svc.cluster.local:27017" },
+                { _id: 2, host: "ubsi-mongo-2.ubsi-mongo-svc.extension-ubsipaas.svc.cluster.local:27017" }
+              ]
+            };
+            if (!rs.isMaster() && !rs.secondaryss) {
+              rs.initiate(config);
+            }
+          '
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+          limits:
+            cpu: 200m
+            memory: 200Mi
+      restartPolicy: OnFailure
+      backoffLimit: 4
+{{- end }}

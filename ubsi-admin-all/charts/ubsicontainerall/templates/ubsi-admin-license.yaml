@@ -1,0 +1,16 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: ubsi-admin-license
+  annotations:
+    kubesphere.io/description: ubsi-admin license
+data:
+  ubsi-admin-license.json: |-
+    {
+     "sn": "S22101000004",
+     "name": "rewin",
+     "domain": "ubsi",
+     "redis": "192.168.1.115",
+     "mongo": "192.168.1.115",
+     "sign": "29a0dfd02248f27f53da349a46df5532fc8939f7866fa5c1f88b1c20aebeb78e9861b8917dbccb466bfcd3033f27737393813e19c2c20a741766e35abc65f1fa3851ce7d78540793027a8c8b8c9597d6f42b26ed8d057bea5e63cd15880a2a75c5980ca0260cbea2af958720b7e0de32b7ea178db46c4f669f0d5ebd0b0152d1"
+    }

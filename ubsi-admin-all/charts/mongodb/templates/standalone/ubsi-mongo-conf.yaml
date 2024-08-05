@@ -1,0 +1,22 @@
+{{- if eq .Values.architecture "standalone" }}
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: ubsi-mongo-conf
+  annotations:
+    kubesphere.io/description: ubsi mongodb 配置字典
+data:
+  rewin.ubsi.mongodb.json: |-
+    {
+      "servers": [
+        {
+	  {{- if .Values.service.name }}
+          "host": "{{ .Values.service.name }}.extension-ubsipaas.svc",
+          {{- else }}
+          "host": "ubsi-mongo.extension-ubsipaas.svc",
+          {{- end }}
+          "port": 27017
+        }
+      ]
+    }
+{{- end }}

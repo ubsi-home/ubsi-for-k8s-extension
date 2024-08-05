@@ -1,0 +1,65 @@
+apiVersion: kubesphere.io/v1alpha1
+name: ubsipaas
+version: 1.0.0
+displayName:
+  zh: UBSI微服务治理工具
+  en: UBSI-Admin
+description:
+  zh: UBSI是一整套高度集成、轻量化的Java技术栈微服务架构解决方案，配套完整的可视化治理、运维监控工具。
+  en: UBSI is a highly integrated and lightweight Java technology stack microservice architecture solution, equipped with complete visual governance and operation monitoring tools.
+category: dev-tools
+keywords:
+  - ubsi
+  - Cloud native
+  - Microservices
+  - DevOps
+  - Continuous Delivery
+  - Container
+  - 微服务
+  - 持续交付
+  - 容器
+home: https://ubsi-home.github.io
+kubeVersion: ">=1.19.0-0"
+ksVersion: ">=4.0.0-0"
+maintainers:
+  - name: "北京融汇易讯网络技术有限公司"
+    email: "ubsi@rewin.com.cn"
+    url: "https://ubsi-home.github.io/"
+provider:
+  zh:
+    name: "北京融汇易讯网络技术有限公司"
+    email: "ubsi@rewin.com.cn"
+    url: "https://ubsi-home.github.io/"
+  en:
+    name: "北京融汇易讯网络技术有限公司"
+    email: "ubsi@rewin.com.cn"
+    url: "https://ubsi-home.github.io/"
+icon: ./static/favicon.jpg
+screenshots:
+  - ./static/screenshots/UBSICore.png
+  - ./static/screenshots/UBSIBuild.png
+  - ./static/screenshots/ubsi1.png
+  - ./static/screenshots/ubsi2.png
+  - ./static/screenshots/ubsi3.png
+  - ./static/screenshots/ubsi4.png
+  - ./static/screenshots/ubsi5.png
+  - ./static/screenshots/ubsi6.png
+  - ./static/screenshots/ubsi7.png
+  - ./static/screenshots/ubsi8.png
+
+# installationMode describes how to install subcharts, it can be HostOnly or Multicluster.
+# In Multicluster mode, the subchart with tag `extension` will only be deployed to the host cluster,
+# and the subchart with tag `agent` will be deployed to all selected clusters.
+installationMode: HostOnly
+# Custom namespace example: If not specified, it will be installed in the namespace named extension-{name}.
+#namespace: ""
+# external dependencies example
+#externalDependencies:
+#  - name: a
+#    type: extension
+#    version: ">= 2.6.0"
+#    required: true
+#  - name: b
+#    type: extension
+#    version: ">= 2.2.0"
+#    required: true

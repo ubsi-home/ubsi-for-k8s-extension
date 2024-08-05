@@ -1,0 +1,9 @@
+apiVersion: v1
+appVersion: "1.0"
+description: redis Stateful workloads
+maintainers:
+- email: cuixx@rewin.com.cn
+  name: cuixx
+name: redis
+type: application
+version: "1"

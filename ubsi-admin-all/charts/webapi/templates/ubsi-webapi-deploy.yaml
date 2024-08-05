@@ -1,0 +1,76 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: ubsi-webapi
+  #namespace: extension-ubsicontainer
+  annotations:
+    deployment.kubernetes.io/revision: '7'
+    kubectl.kubernetes.io/last-applied-configuration: >
+      {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"name":"ubsi-webapi","namespace":"extension-ubsicontainer"},"spec":{"replicas":1,"selector":{"matchLabels":{"app":"ubsi-webapi"}},"template":{"metadata":{"labels":{"app":"ubsi-webapi"}},"spec":{"containers":[{"env":[{"name":"JAVA_OPTS","value":"-Xmx256m
+      -Xms256m"},{"name":"SPRING_PROFILES_ACTIVE","value":"prod"}],"image":"registry.cn-hangzhou.aliyuncs.com/ubsi/webapi:latest","name":"ubsi-webapi-container","ports":[{"containerPort":8080}],"resources":{"limits":{"cpu":"500m","memory":"512Mi"},"requests":{"cpu":"200m","memory":"256Mi"}},"volumeMounts":[{"mountPath":"/opt/webapi/rewin.ubsi.consumer.json","name":"config-volume","readOnly":true,"subPath":"rewin.ubsi.consumer.json"}]}],"dnsPolicy":"ClusterFirst","restartPolicy":"Always","volumes":[{"configMap":{"defaultMode":420,"name":"ubsi-redis-conf"},"name":"config-volume"}]}}}}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ubsi-webapi
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: ubsi-webapi
+      annotations:
+        kubesphere.io/imagepullsecrets: '{}'
+        kubesphere.io/restartedAt: '2024-05-06T06:07:49.134Z'
+        logging.kubesphere.io/logsidecar-config: '{}'
+    spec:
+      volumes:
+        - name: host-time
+          hostPath:
+            path: /etc/localtime
+            type: ''
+        - name: volume-exxwop
+          configMap:
+            name: ubsi-redis-conf
+            defaultMode: 420
+      containers:
+        - name: ubsi-webapi-container
+          image: 'registry.cn-hangzhou.aliyuncs.com/ubsi/webapi:latest'
+          ports:
+            - name: http-8080
+              containerPort: 8080
+              protocol: TCP
+          env:
+            - name: JAVA_OPTS
+              value: '-Xmx256m -Xms256m'
+            - name: SPRING_PROFILES_ACTIVE
+              value: prod
+          resources:
+            limits:
+              cpu: 500m
+              memory: 512Mi
+            requests:
+              cpu: 200m
+              memory: 256Mi
+          volumeMounts:
+            - name: host-time
+              readOnly: true
+              mountPath: /etc/localtime
+            - name: volume-exxwop
+              readOnly: true
+              mountPath: /opt/webapi/rewin.ubsi.consumer.json
+              subPath: rewin.ubsi.consumer.json
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          imagePullPolicy: Always
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      securityContext: {}
+      schedulerName: default-scheduler
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 25%
+      maxSurge: 25%
+  revisionHistoryLimit: 10
+  progressDeadlineSeconds: 600

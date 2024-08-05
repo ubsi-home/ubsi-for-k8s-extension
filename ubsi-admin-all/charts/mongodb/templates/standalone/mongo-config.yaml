@@ -1,0 +1,16 @@
+{{- if eq .Values.architecture "standalone" }}
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: mongo-config
+  #namespace: extension-ubsicontainer
+data:
+  mongodb.conf: |-
+    dbpath=/data/mongodb
+    #logpath=/data/mongodb/mongodb.log
+    pidfilepath=/data/mongodb/master.pid
+    directoryperdb=true
+    logappend=true
+    bind_ip=0.0.0.0
+    port=27017
+{{- end }}

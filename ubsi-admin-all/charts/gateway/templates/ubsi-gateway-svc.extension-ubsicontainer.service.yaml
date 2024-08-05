@@ -1,0 +1,23 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: ubsi-gateway-svc
+  #namespace: extension-ubsicontainer
+  labels:
+    app: ubsi-gateway-svc
+spec:
+  ports:
+    - name: http-8090
+      protocol: TCP
+      port: 8090
+      targetPort: 8090
+      nodePort: 30890
+  selector:
+    app: ubsi-gateway
+  type: NodePort
+  sessionAffinity: None
+  externalTrafficPolicy: Cluster
+  ipFamilies:
+    - IPv4
+  ipFamilyPolicy: SingleStack
+  internalTrafficPolicy: Cluster

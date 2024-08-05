@@ -1,0 +1,73 @@
+{{- if eq .Values.architecture "standalone" }}
+kind: StatefulSet
+apiVersion: apps/v1
+metadata:
+  name: ubsi-redis
+  #namespace: extension-ubsicontainer
+  labels:
+    app: ubsi-redis
+  annotations:
+    kubesphere.io/description: redis service
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: ubsi-redis
+  template:
+    metadata:
+      labels:
+        app: ubsi-redis
+    spec:
+      volumes:
+        - name: volume-cxtro1
+          configMap:
+            name: redis-conf
+            defaultMode: 420
+      containers:
+        - name: redis-con
+          image: "{{ .Values.redis.image.registry }}/{{ .Values.redis.image.repository }}:{{ .Values.redis.image.tag }}"
+          command:
+            - redis-server
+          args:
+            - /etc/redis/redis.conf
+          ports:
+            - name: tcp-6379
+              containerPort: 6379
+              protocol: TCP
+          resources:
+            limits:
+              cpu: '2'
+              memory: 4000Mi
+          volumeMounts:
+            - name: redis-pvc
+              mountPath: /data
+            - name: volume-cxtro1
+              readOnly: true
+              mountPath: /etc/redis
+          imagePullPolicy: Always
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      serviceAccountName: default
+      serviceAccount: default
+      schedulerName: default-scheduler
+  volumeClaimTemplates:
+    - kind: PersistentVolumeClaim
+      apiVersion: v1
+      metadata:
+        name: redis-pvc
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: "{{ .Values.persistence.size }}"
+	{{- if .Values.persistence.storageClass }}
+        storageClassName: "{{ .Values.persistence.storageClass }}"
+	{{- end }}
+  {{- if .Values.service.name }}
+  serviceName: "{{ .Values.service.name }}"
+  {{- else }}
+  serviceName: redis
+  {{- end }}
+{{- end }}

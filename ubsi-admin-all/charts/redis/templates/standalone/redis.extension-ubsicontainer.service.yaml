@@ -1,0 +1,30 @@
+{{- if eq .Values.architecture "standalone" }}
+kind: Service
+apiVersion: v1
+metadata:
+  {{- if .Values.service.name }}
+  name: "{{ .Values.service.name }}"
+  {{- else }}
+  name: redis
+  {{- end }}
+  #namespace: extension-ubsicontainer
+  labels:
+    {{- if .Values.service.name }}
+    app: "{{ .Values.service.name }}"
+    {{- else }}
+    app: redis
+    {{- end }}
+spec:
+  ports:
+    - name: tcp-6379
+      protocol: TCP
+      port: 6379
+      targetPort: 6379
+      nodePort: 32097
+  selector:
+    app: ubsi-redis
+  type: NodePort
+  ipFamilies:
+    - IPv4
+  ipFamilyPolicy: SingleStack
+{{- end }}

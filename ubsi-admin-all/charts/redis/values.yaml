@@ -1,0 +1,44 @@
+#replicaCount: 1
+
+
+redis:
+  image:
+    registry: docker.io
+    repository: redis
+    tag: latest
+  service:
+    port: 6379
+  #architecture: replicaset ##replicaset 集群模式；standalone 单例模式
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: true
+  annotations: {}
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+persistence:
+  enabled: true
+  #storageClass: "-"
+  accessModes:
+    [ReadWriteOnce]
+  size: 2Gi
+securityContext: {}
+service:
+  type: ClusterIP
+  port: 80
+deployment:
+  replicas: 1
+  resources:
+    limits:
+      cpu: 200m
+      memory: 256Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+

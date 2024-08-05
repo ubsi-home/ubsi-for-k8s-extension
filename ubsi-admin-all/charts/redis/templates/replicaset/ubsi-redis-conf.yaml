@@ -1,0 +1,25 @@
+{{- if eq .Values.architecture "replicaset" }}
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: ubsi-redis-conf
+  #namespace: extension-ubsicontainer
+  annotations:
+    kubesphere.io/description: ubsi redis 配置字典
+data:
+  rewin.ubsi.consumer.json: |-
+    {
+      "io_threads": 10,
+      "redis_master_name": "master0",
+      {{- if .Values.service.name }}
+      "redis_sentinel_addr":["redis-sentinel-0.{{ .Values.service.name }}-sentinel.extension-ubsipaas.svc.cluster.local:26379","redis-sentinel-1.{{ .Values.service.name }}-sentinel.extension-ubsipaas.svc.cluster.local:26379","redis-sentinel-2.{{ .Values.service.name }}-sentinel.extension-ubsipaas.svc.cluster.local:26379"],
+      {{- else }}
+      "redis_sentinel_addr":["redis-sentinel-0.redis-sentinel-svc.extension-ubsipaas.svc.cluster.local:26379","redis-sentinel-1.redis-sentinel-svc.extension-ubsipaas.svc.cluster.local:26379","redis-sentinel-2.redis-sentinel-svc.extension-ubsipaas.svc.cluster.local:26379"],
+      {{- end }}
+      "redis_conn_idle": 8,
+      "redis_conn_max": 16,
+      "timeout_connect": 5,
+      "timeout_request": 30,
+      "timeout_reconnect": 600
+    }
+{{- end }}

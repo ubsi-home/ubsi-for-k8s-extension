@@ -1,0 +1,44 @@
+#replicaCount: 1
+
+mongodb:
+  image:
+    repository: mongo
+    tag: latest
+  service:
+    port: 27017
+  #architecture: standalone ##replicaset 集群模式；standalone 单例模式
+persistence:
+  enabled: true
+  #storageClass: "-"
+  accessModes:
+    - ReadWriteOnce
+  size: 10Gi
+
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: true
+  annotations: {}
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+
+securityContext: {}
+service:
+  type: ClusterIP
+  port: 80
+deployment:
+  replicas: 1
+  resources:
+    limits:
+      cpu: 200m
+      memory: 256Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+

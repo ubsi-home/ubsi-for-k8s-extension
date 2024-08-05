@@ -1,0 +1,25 @@
+{{- if eq .Values.architecture "standalone" }}
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: ubsi-redis-conf
+  #namespace: extension-ubsicontainer
+  annotations:
+    kubesphere.io/description: ubsi redis 配置字典
+data:
+  rewin.ubsi.consumer.json: |-
+    {
+      "io_threads": 1,
+      {{- if .Values.service.name }}
+      "redis_host": "{{ .Values.service.name }}.extension-ubsipaas.svc",
+      {{- else }}
+      "redis_host": "redis.extension-ubsipaas.svc",
+      {{- end }}
+      "redis_port": 6379,
+      "redis_conn_idle": 8,
+      "redis_conn_max": 16,
+      "timeout_connect": 5,
+      "timeout_request": 30,
+      "timeout_reconnect": 600
+    }
+{{- end }}

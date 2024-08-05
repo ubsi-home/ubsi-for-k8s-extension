@@ -1,0 +1,14 @@
+{{- if eq .Values.architecture "standalone" }}
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: redis-conf
+  #namespace: extension-ubsicontainer
+  annotations:
+    kubesphere.io/description: 配置redis-conf文件
+data:
+  redis.conf: |-
+    appendonly yes
+    port 6379
+    bind 0.0.0.0
+{{- end }}
