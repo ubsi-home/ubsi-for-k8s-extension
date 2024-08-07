@@ -9,7 +9,20 @@ UBSI-Admin for k8s 治理工具的安装包
 
 下载安装包：
 
-`git clone https://github.com/ubsi-home/ubsi-for-k8s-extension`
+`git clone https://github.com/ubsi-home/ubsi-for-k8s-extension.git`
+
+执行安装命令：
+
+  ```
+  helm install ubsipaas ./ubsipaas-1.0.2.tgz \
+  --namespace extension-ubsipaas \
+  --set base.domain=rewin.ubsi.admin.com \
+  --set base.ingressPort=30888 \
+  --set mongodb.replicaCount=1 \
+  --set mongodb.architecture=standalone \
+  --set redis.replicaCount=1 \
+  --set redis.architecture=standalone
+  ```
 
 
 
