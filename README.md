@@ -23,6 +23,13 @@ UBSI-Admin for k8s 治理工具的安装包
   --set redis.replicaCount=1 \
   --set redis.architecture=standalone
   ```
+卸载命令：
+  ```
+  helm delete  ubsipaas -n extension-ubsipaas
+
+  ```
+注意事项：
+   安装程序的命名空间可以改动，但是需要修改应用程序所用的配置文件，具体修改事项请联系我们：`ubsi@rewin.com.cn`
 
 
 
