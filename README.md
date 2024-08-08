@@ -29,7 +29,9 @@ UBSI-Admin for k8s 治理工具的安装包
 
   ```
 注意事项：
-   安装程序的命名空间可以改动，但是需要修改应用程序所用的配置文件，具体修改事项请联系我们：`ubsi@rewin.com.cn`
+   - 安装程序的命名空间可以改动，但是需要修改应用程序所用的配置文件
+   - 需要修改配置字典：nginx-config、ubsi-redis-conf、ubsi-mongo-conf
+   - 以上，如果自己不能修改可以请联系我们：`ubsi@rewin.com.cn`
 
 
 
